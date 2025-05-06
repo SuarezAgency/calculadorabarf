@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Dieta Perruna Cool 🐶✨</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-image: linear-gradient(to top right, #ffc3a0 0%, #ffafbd 100%); /* Warm gradient */
+            color: #4A5568; /* Gray-700 for base text */
+        }
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2.5rem; /* Increased padding */
+            background-color: rgba(255, 255, 255, 0.85); /* Semi-transparent white */
+            backdrop-filter: blur(10px); /* Frosted glass effect */
+            border-radius: 24px; /* More rounded */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); /* Softer, larger shadow */
+        }
+        h1 {
+            font-weight: 800;
+            font-size: 2.5rem; /* Larger H1 */
+            background: linear-gradient(to right, #ef4444, #f97316); /* Red-Orange gradient */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        h2 {
+            font-weight: 700;
+            color: #c2410c; /* Darker Orange */
+        }
+        h3.recipe-title {
+            font-weight: 600;
+            color: #dd6b20; /* Orange-600 */
+        }
+        label {
+            color: #4A5568; /* Gray-700 */
+            font-weight: 500;
+        }
+        input[type="text"], input[type="number"], select {
+            border: 2px solid #fca5a5; /* Lighter Red-300 border */
+            border-radius: 12px; /* More rounded inputs */
+            padding: 0.85rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent inputs */
+        }
+        input[type="text"]:focus, input[type="number"]:focus, select:focus {
+            border-color: #ef4444; /* Red-500 */
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2); /* Red focus ring */
+            outline: none;
+            background-color: white;
+        }
+        .btn-primary {
+            background-image: linear-gradient(to right, #ef4444 0%, #f97316 100%);
+            color: white;
+            padding: 1rem 1.5rem; /* Larger button padding */
+            border-radius: 12px; /* More rounded buttons */
+            font-weight: 600; /* Bolder button text */
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); /* Button shadow */
+            width: 100%;
+            text-transform: uppercase; /* Uppercase button text */
+            letter-spacing: 0.05em;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px); /* Slight lift on hover */
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+        .results-card {
+            background-color: rgba(255, 237, 213, 0.8); /* Lighter Orange-100, semi-transparent */
+            border: 2px solid #fdba74; /* Orange-300 border */
+            border-radius: 16px;
+            padding: 2rem; /* Increased padding */
+            margin-top: 2rem;
+        }
+        .recipe-block {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid #fed7aa; /* Orange-200 border */
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .info-card {
+            background-color: rgba(254, 252, 232, 0.85); /* Lighter Yellow-50, semi-transparent */
+            border: 2px solid #fde047; /* Yellow-400 border */
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        .error-message {
+            color: #dc2626; /* Red-600 */
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+        .radio-label {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.25rem; /* Adjusted padding */
+            border: 2px solid #fca5a5; /* Lighter Red-300 */
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            width: 100%;
+            justify-content: center;
+            font-weight: 500;
+            background-color: rgba(255,255,255,0.7);
+        }
+        .radio-label:hover {
+            background-color: #fee2e2; /* Red-100 */
+            border-color: #f87171; /* Red-400 */
+        }
+        input[type="radio"]:checked + .radio-label {
+            background-color: #f87171; /* Red-400 */
+            border-color: #ef4444; /* Red-500 */
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+        }
+        input[type="radio"] {
+            display: none;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(to bottom, #ef4444, #f97316); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(to bottom, #dc2626, #ea580c); }
+
+        /* Styling for the age input group */
+        .age-input-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem; /* Space between number input and unit select */
+        }
+        .age-input-group input[type="number"] {
+            flex-grow: 1; /* Number input takes available space */
+        }
+        .age-input-group select {
+            flex-shrink: 0; /* Select does not shrink */
+            width: auto; /* Adjust width to content */
+            min-width: 80px; /* Minimum width for the select */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="text-center mb-10">
+            <h1 class="mb-3">Calculadora de Dieta Perruna Cool 🐶✨</h1>
+            <p class="text-lg text-slate-600">¡Prepara el festín perfecto para tu mejor amigo! 🦴🥕</p>
+        </header>
+
+        <form id="dietForm" class="space-y-8">
+            <div>
+                <label for="breed" class="block text-sm font-medium mb-2">¿Qué raza es tu perri? 🐕</label>
+                <input type="text" id="breed" list="dogBreeds" class="shadow-sm" placeholder="Ej: Labrador, Criollo Pro">
+                <datalist id="dogBreeds">
+                    <option value="Labrador Retriever">
+                    <option value="Pastor Alemán">
+                    <option value="Golden Retriever">
+                    <option value="Bulldog Francés">
+                    <option value="Schnauzer">
+                    <option value="Beagle">
+                    <option value="Pinscher">
+                    <option value="Criollo Pequeño">
+                    <option value="Criollo Mediano">
+                    <option value="Criollo Grande">
+                    <option value="Yorkshire Terrier">
+                    <option value="Shih Tzu">
+                    <option value="Pug">
+                </datalist>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="ageValue" class="block text-sm font-medium mb-2">Edad: 🎉</label>
+                    <div class="age-input-group">
+                        <input type="number" id="ageValue" min="1" step="1" class="shadow-sm" placeholder="Ej: 3 o 10">
+                        <select id="ageUnit" class="shadow-sm">
+                            <option value="años" selected>Años</option>
+                            <option value="meses">Meses</option>
+                        </select>
+                    </div>
+                    <p id="ageError" class="error-message hidden"></p>
+                </div>
+                <div>
+                    <label for="weight" class="block text-sm font-medium mb-2">Peso (kg): ⚖️</label>
+                    <input type="number" id="weight" min="0.1" step="0.1" class="shadow-sm" placeholder="Ej: 5.5">
+                    <p id="weightError" class="error-message hidden"></p>
+                </div>
+            </div>
+
+            <div>
+                <label for="activityLevel" class="block text-sm font-medium mb-2">Nivel de Actividad: ⚡️</label>
+                <select id="activityLevel" class="shadow-sm">
+                    <option value="bajo">Chill (Paseos cortos, modo relax)</option>
+                    <option value="moderado" selected>Normal (Paseos diarios, full juego)</option>
+                    <option value="alto">¡A Tope! (Super activo, modo deportista)</option>
+                </select>
+            </div>
+            
+            <div>
+                <label for="proteinChoice" class="block text-sm font-medium mb-2">Proteína Estrella: 🍗🥩🐟</label>
+                <select id="proteinChoice" class="shadow-sm">
+                    <option value="pollo">Pollo (Pechuga, Muslo, Contramuslo)</option>
+                    <option value="res">Res (Carne magra, Corazón)</option>
+                    <option value="cerdo">Cerdo (Lomo magro)</option>
+                    <option value="pescado">Pescado Blanco (Tilapia, Merluza)</option>
+                    <option value="huevo">Huevo (¡energía pura!)</option>
+                    <option value="pavo">Pavo (Pechuga, Muslo)</option>
+                </select>
+                 <p id="proteinError" class="error-message hidden"></p>
+            </div>
+
+            <div>
+                <span class="block text-sm font-medium mb-3">Tipo de Dieta: 🍖 vs 🍲</span>
+                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+                    <div class="flex-1">
+                        <input type="radio" name="dietType" id="rawDiet" value="cruda" checked>
+                        <label for="rawDiet" class="radio-label">🍖 Cruda (BARF)</label>
+                    </div>
+                    <div class="flex-1">
+                        <input type="radio" name="dietType" id="cookedDiet" value="cocida">
+                        <label for="cookedDiet" class="radio-label">🍲 Cocida</label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" id="calculateBtn" class="btn-primary">
+                ¡Calcular Festín! 🚀
+            </button>
+        </form>
+
+        <div id="results" class="results-card hidden mt-10">
+            <h2 class="text-2xl font-semibold mb-6 text-center">🎉 ¡Plan de Comida Listo! 🎉</h2>
+            <div id="totalAmountInfo" class="text-xl font-medium mb-6 text-center"></div>
+            <div id="recipesArea" class="space-y-6">
+                </div>
+        </div>
+
+        <div class="info-card mt-10">
+            <h2 class="text-xl font-semibold mb-4">⚠️ ¡Ojo! Consejos Importantes ⚠️</h2>
+            <ul class="list-disc list-inside space-y-2 text-sm text-slate-700">
+                <li><strong>Ingredientes Colombianos:</strong> Usamos yuca, papa, ahuyama, ¡y más delicias locales! 🇨🇴</li>
+                <li><strong>Transición Suave:</strong> Introduce la nueva dieta poquito a poco (7-10 días).</li>
+                <li><strong>Agüita Fresca:</strong> ¡Que nunca falte el agua limpia! 💧</li>
+                <li><strong>Modo Detective:</strong> Chequea el peso y ánimo de tu perri. Ajusta si es necesario.</li>
+                <li><strong>BARF Seguro:</strong> Con la carne cruda, ¡full limpieza! Lava todo súper bien. ✨</li>
+                <li><strong>¡No Dar! ❌:</strong> Chocolate, uvas, pasas, cebolla, ajo (mucho), aguacate, xilitol.</li>
+                <li><strong>Huesos Crudos (BARF):</strong> Solo crudos, carnosos y del tamaño correcto. ¡NUNCA cocidos!</li>
+                <li><strong>Dieta Cocida + Calcio:</strong> ¡Súper importante! Necesita calcio (harina de hueso, etc.) y quizás un multivitamínico. ¡Pregunta al veterinario! 👨‍⚕️👩‍⚕️</li>
+                <li><strong>Veterinario al Mando:</strong> <strong class="text-red-600">Esta calcu es una guía, NO reemplaza al vete.</strong> ¡Un pro debe chequear el plan! Especialmente para cachorros, abuelitos o perris con condiciones especiales.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const calculateBtn = document.getElementById('calculateBtn');
+        const resultsDiv = document.getElementById('results');
+        const totalAmountInfoDiv = document.getElementById('totalAmountInfo');
+        const recipesAreaDiv = document.getElementById('recipesArea');
+        
+        // Updated age input elements
+        const ageValueInput = document.getElementById('ageValue'); // Input for the number
+        const ageUnitSelect = document.getElementById('ageUnit'); // Select for years/months
+
+        const weightInput = document.getElementById('weight');
+        const proteinInput = document.getElementById('proteinChoice');
+
+        const ageError = document.getElementById('ageError');
+        const weightError = document.getElementById('weightError');
+        const proteinError = document.getElementById('proteinError');
+
+        // --- Colombian Ingredient Lists (remains the same) ---
+        const colombianProteins = {
+            pollo: { name: "Pollo (Pechuga, muslo, contramuslo sin piel)", raw_examples: "Pechuga de pollo cruda, muslo de pollo crudo", cooked_examples: "Pechuga de pollo cocida/desmenuzada, muslo cocido" },
+            res: { name: "Res (Carne magra de res, corazón de res)", raw_examples: "Carne de res molida cruda, corazón de res crudo", cooked_examples: "Carne de res magra cocida, corazón de res cocido" },
+            cerdo: { name: "Cerdo (Lomo magro de cerdo)", raw_examples: "Lomo de cerdo crudo en trozos", cooked_examples: "Lomo de cerdo magro cocido" },
+            pescado: { name: "Pescado Blanco (Tilapia, Merluza, Trucha - sin espinas)", raw_examples: "Filete de tilapia crudo", cooked_examples: "Filete de pescado cocido al vapor o hervido" },
+            huevo: { name: "Huevo", raw_examples: "Huevo crudo (con moderación)", cooked_examples: "Huevo cocido (revuelto o duro)" },
+            pavo: { name: "Pavo (Pechuga o muslo sin piel)", raw_examples: "Pechuga de pavo cruda", cooked_examples: "Pechuga o muslo de pavo cocido" }
+        };
+        const colombianCarbs = {
+            raw: ["Batata triturada (poca)", "Ahuyama triturada"],
+            cooked: ["Arroz blanco cocido", "Papa pastusa/sabanera cocida (sin piel)", "Yuca cocida (sin hebra)", "Plátano maduro cocido (poco)", "Avena en hojuelas cocida", "Lentejas cocidas", "Zanahoria cocida"]
+        };
+        const colombianVeggies = { 
+            options: ["Habichuela cocida/triturada", "Ahuyama cocida/triturada", "Espinaca (poca y triturada cruda, o cocida)", "Brócoli cocido (moderado)", "Pimentón (sin semillas)", "Pepino cohombro (sin semillas)"]
+        };
+        const colombianFruits = { 
+            options: ["Papaya (sin semillas)", "Mango (sin semilla, poco)", "Banano (poco)", "Manzana (sin corazón/semillas)", "Pera (sin corazón/semillas)"]
+        };
+        const colombianRawMeatyBones = ["Cuello de pollo crudo", "Ala de pollo cruda", "Pata de pollo cruda (sin uñas)", "Carcasa de pollo cruda"];
+        const colombianOrgansRaw = ["Hígado de pollo/res crudo", "Corazón de pollo/res crudo", "Riñón de res crudo (poco)"];
+
+        calculateBtn.addEventListener('click', function() {
+            ageError.classList.add('hidden'); ageError.textContent = '';
+            weightError.classList.add('hidden'); weightError.textContent = '';
+            proteinError.classList.add('hidden'); proteinError.textContent = '';
+            resultsDiv.classList.add('hidden');
+
+            // Get age value and unit
+            const ageRawValue = parseFloat(ageValueInput.value);
+            const ageUnit = ageUnitSelect.value;
+            let ageInYears; // This will be the age normalized to years
+
+            const weightKg = parseFloat(weightInput.value);
+            const activityLevel = document.getElementById('activityLevel').value;
+            const dietType = document.querySelector('input[name="dietType"]:checked').value;
+            const proteinChoiceKey = proteinInput.value;
+
+            let isValid = true;
+
+            // --- Age Validation and Conversion ---
+            if (isNaN(ageRawValue) || ageRawValue <= 0) {
+                ageError.textContent = '¡Ups! Ingresa una edad válida (mayor a 0).'; 
+                ageError.classList.remove('hidden'); 
+                isValid = false;
+            } else {
+                if (ageUnit === 'meses') {
+                    if (ageRawValue < 1) { // A puppy should be at least 1 month old for this kind of diet planning generally
+                        ageError.textContent = 'Para cachorros, ingresa al menos 1 mes.';
+                        ageError.classList.remove('hidden');
+                        isValid = false;
+                    }
+                    ageInYears = ageRawValue / 12;
+                } else { // ageUnit is 'años'
+                    ageInYears = ageRawValue;
+                }
+            }
+            
+            // --- Other Validations ---
+            if (isNaN(weightKg) || weightKg <= 0) {
+                weightError.textContent = '¡Ojo! Ingresa un peso válido (mayor a 0).'; 
+                weightError.classList.remove('hidden'); 
+                isValid = false;
+            }
+            if (!proteinChoiceKey) {
+                proteinError.textContent = '¡Hey! Elige una proteína estrella.'; 
+                proteinError.classList.remove('hidden'); 
+                isValid = false;
+            }
+
+            if (!isValid) {
+                return; 
+            }
+
+            // --- Calculation Logic (using ageInYears) ---
+            const rer = 70 * Math.pow(weightKg, 0.75);
+            let derFactor;
+
+            // DER factor calculation now uses ageInYears
+            if (ageInYears < (4/12)) { // Puppy 0-4 months (approx. 0.33 years)
+                derFactor = 3.0;
+            } else if (ageInYears < 1) { // Puppy 4-12 months (approx)
+                derFactor = 2.0;
+            } else if (ageInYears <= 7) { // Adult 1-7 years
+                switch (activityLevel) {
+                    case 'bajo': derFactor = 1.4; break;
+                    case 'moderado': derFactor = 1.6; break;
+                    case 'alto': derFactor = 2.0; break;
+                    default: derFactor = 1.6;
+                }
+            } else { // Senior > 7 years
+                switch (activityLevel) {
+                    case 'bajo': derFactor = 1.2; break;
+                    case 'moderado': derFactor = 1.4; break;
+                    case 'alto': derFactor = 1.6; break;
+                    default: derFactor = 1.4;
+                }
+            }
+            
+            const der = rer * derFactor;
+            const caloricDensity = dietType === 'cruda' ? 1.5 : 1.3; 
+            const totalDailyFoodGrams = Math.round(der / caloricDensity);
+
+            totalAmountInfoDiv.innerHTML = `<strong>Cantidad Total Diaria (aprox):</strong> ${totalDailyFoodGrams} gramos <br> <span class="text-base font-normal">(Divide en 2-3 comidas para adultos, ${ageInYears < 1 ? '3-4 para cachorros' : '2-3 para adultos'})</span>`;
+            
+            recipesAreaDiv.innerHTML = ''; 
+
+            for (let i = 1; i <= 3; i++) {
+                recipesAreaDiv.appendChild(generateRecipeHTML(proteinChoiceKey, totalDailyFoodGrams, dietType, i));
+            }
+
+            resultsDiv.classList.remove('hidden');
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        function getRandomElement(arr) {
+            if (!arr || arr.length === 0) return "N/A";
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function generateRecipeHTML(proteinKey, totalGrams, dietType, recipeNumber) {
+            const recipeDiv = document.createElement('div');
+            recipeDiv.className = 'recipe-block';
+            
+            let recipeHtml = `<h3 class="text-xl font-semibold mb-3 recipe-title">💡 Receta Sugerida #${recipeNumber} (${dietType === 'cruda' ? 'Cruda BARF Style' : 'Casera Cocida'})</h3>`;
+            recipeHtml += `<ul class="list-disc list-inside space-y-1.5 text-sm text-slate-700">`;
+
+            const selectedProteinInfo = colombianProteins[proteinKey];
+
+            if (dietType === 'cruda') {
+                const muscleMeatPercent = 0.55; 
+                const rmbPercent = 0.15;
+                const liverPercent = 0.05;
+                const otherOrgansPercent = 0.05;
+                const veggiesFruitsPercent = 0.10;
+                const supplementsPercent = 0.10;
+
+                let muscleMeat = Math.round(totalGrams * muscleMeatPercent);
+                let rawMeatyBones = Math.round(totalGrams * rmbPercent);
+                let liver = Math.round(totalGrams * liverPercent);
+                let otherOrgans = Math.round(totalGrams * otherOrgansPercent);
+                let veggiesFruits = Math.round(totalGrams * veggiesFruitsPercent);
+                let supplementsPlaceholder = Math.round(totalGrams * supplementsPercent);
+                
+                const sumCruda = muscleMeat + rawMeatyBones + liver + otherOrgans + veggiesFruits + supplementsPlaceholder;
+                supplementsPlaceholder += (totalGrams - sumCruda);
+                if (supplementsPlaceholder < 0) {
+                    veggiesFruits += supplementsPlaceholder;
+                    supplementsPlaceholder = 0;
+                }
+
+                recipeHtml += `<li><strong>${selectedProteinInfo.name} Cruda:</strong> ${muscleMeat} g (Ej: ${selectedProteinInfo.raw_examples})</li>`;
+                recipeHtml += `<li><strong>Huesos Carnosos Crudos:</strong> ${rawMeatyBones} g (Ej: ${getRandomElement(colombianRawMeatyBones)})</li>`;
+                recipeHtml += `<li><strong>Hígado Crudo:</strong> ${liver} g (Ej: ${colombianOrgansRaw.find(o => o.includes("Hígado")) || "Hígado de pollo/res"})</li>`;
+                recipeHtml += `<li><strong>Otros Órganos Crudos:</strong> ${otherOrgans} g (Ej: ${colombianOrgansRaw.find(o => o.includes("Corazón") || o.includes("Riñón")) || "Corazón de pollo/res"})</li>`;
+                
+                let veg1 = getRandomElement(colombianVeggies.options);
+                let fruit1 = getRandomElement(colombianFruits.options);
+                recipeHtml += `<li><strong>Vegetales/Frutas (triturados):</strong> ${veggiesFruits} g (Ej: ${veg1}, ${fruit1} en poca cantidad)</li>`;
+                if (supplementsPlaceholder > 0) {
+                    recipeHtml += `<li><strong>Suplementos (opcional):</strong> ${supplementsPlaceholder} g (Ej: aceite de pescado, kelp, probióticos - según necesidad y consejo vet)</li>`;
+                }
+                recipeHtml += `</ul>`;
+                recipeHtml += `<p class="mt-2 text-xs text-slate-600"><strong>Tip BARF:</strong> ¡Varía las carnes y órganos! Considera aceite de pescado (omega-3) y consulta al vete por suplementos específicos.</p>`;
+
+            } else { // Cocida
+                const cookedProteinPercent = 0.50;
+                const complexCarbsPercent = 0.25;
+                const cookedVeggiesPercent = 0.20;
+                const healthyFatsPercent = 0.05; 
+
+                let cookedProtein = Math.round(totalGrams * cookedProteinPercent);
+                let complexCarbs = Math.round(totalGrams * complexCarbsPercent);
+                let cookedVeggies = Math.round(totalGrams * cookedVeggiesPercent);
+                let healthyFats = Math.round(totalGrams * healthyFatsPercent);
+
+                const sumCocida = cookedProtein + complexCarbs + cookedVeggies + healthyFats;
+                cookedProtein += (totalGrams - sumCocida); 
+
+                recipeHtml += `<li><strong>${selectedProteinInfo.name} Cocida:</strong> ${cookedProtein} g (Ej: ${selectedProteinInfo.cooked_examples})</li>`;
+                
+                let carb1 = getRandomElement(colombianCarbs.cooked);
+                let carb2 = getRandomElement(colombianCarbs.cooked.filter(c => c !== carb1)); 
+                recipeHtml += `<li><strong>Carbohidratos Cocidos:</strong> ${complexCarbs} g (Ej: ${carb1}${carb2 && complexCarbs > 30 ? ` o ${carb2}` : ''})</li>`;
+                
+                let veg1 = getRandomElement(colombianVeggies.options);
+                let veg2 = getRandomElement(colombianVeggies.options.filter(v => v !== veg1));
+                recipeHtml += `<li><strong>Vegetales Cocidos:</strong> ${cookedVeggies} g (Ej: ${veg1}${veg2 && cookedVeggies > 30 ? ` y ${veg2}` : ''})</li>`;
+                recipeHtml += `<li><strong>Grasas Saludables:</strong> ${healthyFats} g (Ej: poquito aceite de oliva/linaza, aguacate - sin semilla/cáscara, con moderación)</li>`;
+                recipeHtml += `</ul>`;
+                recipeHtml += `<p class="mt-2 text-xs text-red-700 font-semibold"><strong>¡MEGA IMPORTANTE (COCIDA)!</strong> Esta dieta NECESITA calcio. ¡Habla con tu vete sobre el suplemento ideal!</p>`;
+            }
+            recipeDiv.innerHTML = recipeHtml;
+            return recipeDiv;
+        }
+    });
+    </script>
+</body>
+</html>
